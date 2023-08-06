@@ -2,8 +2,9 @@ import { RequestHandler } from "express";
 import { Note } from "../models/note.model";
 
 export const listNotes: RequestHandler = async (req, res) => {
+  const user_id = Number(req.params.userId);
   try {
-    const notes: Array<Note> = await Note.findAll();
+    const notes: Array<Note> = await Note.findAll({ where: { user_id } });
     return res.json(notes);
   } catch (error) {
     return res.status(500).json({
@@ -14,8 +15,9 @@ export const listNotes: RequestHandler = async (req, res) => {
 };
 
 export const newNote: RequestHandler = async (req, res) => {
+    const user_id = Number(req.params.userId);
     try {
-      await Note.create({ ...req.body })
+      await Note.create({ ...req.body, user_id })
       return res.status(201).json({
         message: "New note created"
       })
