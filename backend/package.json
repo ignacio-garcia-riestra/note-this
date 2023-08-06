@@ -4,8 +4,7 @@
   "description": "note-this project backend",
   "main": "index.js",
   "scripts": {
-    "dev": "tsc-watch --onSuccess \"node dist/index.js\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsc-watch --onSuccess \"node dist/index.js\""
   },
   "author": "ignacio-garcia-riestra",
   "license": "ISC",
