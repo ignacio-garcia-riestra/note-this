@@ -1,0 +1,29 @@
+[
+  {
+    "title": "Note #1 from default user",
+    "content": "first default user note",
+    "user_id": 1
+  },
+  {
+    "title": "Note #2 from default user",
+    "content": "second default user note",
+    "user_id": 1
+  },
+  {
+    "title": "Note #3 from default user",
+    "content": "third default user note",
+    "is_active": false,
+    "user_id": 1
+  },
+  {
+    "title": "Note #4 from default user",
+    "content": "fourth default user note",
+    "is_active": false,
+    "user_id": 1
+  },
+  {
+    "title": "Note #5 from default user",
+    "content": "fifth default user note",
+    "user_id": 1
+  }
+]
