@@ -24,3 +24,6 @@ After you have cloned the repository and installed the dependencies, you can run
 ```sh 
 npm run app
 ```
+
+defuault user: default@mail.com
+default password: Default123
