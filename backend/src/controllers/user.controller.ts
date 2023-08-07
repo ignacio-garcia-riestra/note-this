@@ -1,37 +1,44 @@
 import { RequestHandler } from "express";
 import { User } from "../models/user.model";
+import { createToken } from "../util/jwt";
+import bcrypt from "bcrypt";
 
-export const newUser: RequestHandler = async (req, res) => {
-  try {
-    await User.create({ ...req.body });
-    return res.status(201).json({
-      message: "New user registered",
-    });
-  } catch (error) {
-    return res.status(500).json({
-      message: "Error registering a new user",
-      error: error,
-    });
-  }
+export const newUser: RequestHandler = (req, res) => {
+  const { firstname, lastname, email, password } = req.body;
+  bcrypt.hash(password, 12).then((hash) => {
+    User.create({
+      firstname,
+      lastname,
+      email,
+      password: hash,
+    })
+      .then(() => {
+        res.status(201).json("Successfully registered user");
+      })
+      .catch((error) => {
+        if (error) {
+          res.status(401).json({ error });
+        }
+      });
+  });
 };
 
 export const authUser: RequestHandler = async (req, res) => {
-  const {email, password} = req.body
-  try {
-    const users = await User.findAll({where: {email}})
-    const validPassword = password === users[0]?.password
-    if (validPassword) {
-      const user = {
-        email,
-        firstname: users[0].firstname,
-        id: users[0].id
-      }
-      return res.json({ user, message: "successful login"})
+  const { email, password } = req.body;
+  const user = await User.findOne({ where: { email: email } });
+  if (!user)
+    res.status(400).json({ error: "No user registered with this email" });
+
+  const hashedPassword = user?.password;
+  bcrypt.compare(password, hashedPassword ?? "").then((match) => {
+    if (!match) {
+      res.status(400).json({
+        error:
+          "Incorrect password. Please verify the email and password you have entered",
+      });
+    } else {
+      const accessToken = createToken(user);
+      res.cookie("token", accessToken).json("Succesfully logged in");
     }
-  } catch (error) {
-    return res.status(500).json({
-      message: "Error on user login",
-      error: error,
-    });
-  }
+  });
 };
