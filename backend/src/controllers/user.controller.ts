@@ -1,7 +1,5 @@
 import { RequestHandler } from "express";
 import { User } from "../models/user.model";
-import jwt from "jsonwebtoken";
-import { serialize } from "cookie";
 
 export const newUser: RequestHandler = async (req, res) => {
   try {
@@ -21,24 +19,14 @@ export const authUser: RequestHandler = async (req, res) => {
   const {email, password} = req.body
   try {
     const users = await User.findAll({where: {email}})
-    if (!users ||!users[0]) return res.status(401).send("email is not registered")
     const validPassword = password === users[0]?.password
     if (validPassword) {
-      const token = jwt.sign({
-        exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 30),
+      const user = {
         email,
-        firstname: users[0].firstname
-      }, "secret")
-      const serializedToken = serialize("myToken", token, {
-        httpOnly: true,
-        sameSite: "none",
-        maxAge: 1000 * 60 * 60 * 24 * 30,
-        path: "/"
-      })
-      res.setHeader("set-cookie", serializedToken)
-      return res.json("successful login")
-    } else {
-      res.status(401).send("invalid password")
+        firstname: users[0].firstname,
+        id: users[0].id
+      }
+      return res.json({ user, message: "successful login"})
     }
   } catch (error) {
     return res.status(500).json({
