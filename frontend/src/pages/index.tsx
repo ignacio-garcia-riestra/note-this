@@ -4,7 +4,7 @@ import * as yup from "yup";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import { BiErrorCircle } from "react-icons/bi";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 
 const validationSchema = yup.object({
@@ -21,15 +21,23 @@ const validationSchema = yup.object({
 
 export default function Home(): JSX.Element {
   const [showPassword, setShowPassword] = useState(false);
-  const [user, setUser] = useState(null)
   const router = useRouter();
 
-  
-  useEffect(() => {
-    if(user) {
-      router.push("/notes")
+  const onLoginHandler = async (values: any) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/users/auth",
+        values
+      );
+      const loggedUser = response.data;
+      router.push({
+        pathname: "/notes",
+        query: loggedUser,
+      });
+    } catch (err: any) {
+      alert(err.response.data.error);
     }
-  }, [user]);
+  };
 
   return (
     <div className="flex flex-col place-items-center min-h-screen">
@@ -42,14 +50,7 @@ export default function Home(): JSX.Element {
             password: "",
           }}
           validationSchema={validationSchema}
-          onSubmit={async (values: any) => {
-            const response = await axios.post(
-              "http://localhost:5000/api/users/auth",
-              values
-            );
-            const loggedUser = response.data.user;
-            setUser(loggedUser)
-          }}
+          onSubmit={onLoginHandler}
         >
           {({ errors, touched }) => (
             <Form className="flex flex-col place-items-start w-full">
@@ -137,7 +138,9 @@ export default function Home(): JSX.Element {
       <button
         className="bg-blue-300 text-white font-inter font-bold text-lg
                   w-28 h-11 rounded-lg self-center"
-        onClick={() => {router.push("/register")}}
+        onClick={() => {
+          router.push("/register");
+        }}
       >
         Register
       </button>

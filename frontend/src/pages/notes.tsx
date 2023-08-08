@@ -1,6 +1,10 @@
+import { useRouter } from "next/router";
 import "../app/globals.css";
 
 export default function Notes() {
+  const router = useRouter();
+  const user = router.query;
+  
   return (
     <div className="bg-white flex flex-col place-items-center min-h-screen">
       <div className="flex flex-row mt-14 w-full max-w-5xl justify-around items-center">
