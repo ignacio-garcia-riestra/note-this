@@ -5,6 +5,7 @@ import router, { useRouter } from "next/router";
 import { BiErrorCircle } from "react-icons/bi";
 import { useState } from "react";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
+import axios from "axios";
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
@@ -37,8 +38,14 @@ export default function Register() {
       .required("Mandatory field"),
   });
 
-  const onRegisterHandler = (e: any) => {
-    console.log(e.target);
+  const onRegisterHandler = async (values: any) => {
+    try {
+      await axios.post("http://localhost:5000/api/users/register", values);
+      alert("Successfully registered");
+      router.push("/");
+    } catch (error: any) {
+      alert(error.response.data.error.errors[0].message);
+    }
   };
 
   return (
@@ -55,7 +62,9 @@ export default function Register() {
             confirmPassword: "",
           }}
           validationSchema={validationSchema}
-          onSubmit={onRegisterHandler}
+          onSubmit={(values) => {
+            onRegisterHandler(values);
+          }}
         >
           {({ errors, touched }) => (
             <Form className="flex flex-col place-items-start w-full">
