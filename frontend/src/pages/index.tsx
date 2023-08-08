@@ -6,6 +6,7 @@ import { BiErrorCircle } from "react-icons/bi";
 import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { useCookies } from "react-cookie";
 
 const validationSchema = yup.object({
   email: yup
@@ -22,6 +23,7 @@ const validationSchema = yup.object({
 export default function Home(): JSX.Element {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+  const [cookie, setCookie] = useCookies(["token"]);
 
   const onLoginHandler = async (values: any) => {
     try {
@@ -30,10 +32,17 @@ export default function Home(): JSX.Element {
         values
       );
       const loggedUser = response.data;
-      router.push({
-        pathname: "/notes",
-        query: loggedUser,
+      setCookie("token", response.data.token, {
+        path: "/",
+        sameSite: true,
       });
+      router.push(
+        {
+          pathname: "/notes",
+          query: loggedUser,
+        },
+        "/myNotes"
+      );
     } catch (err: any) {
       alert(err.response.data.error);
     }

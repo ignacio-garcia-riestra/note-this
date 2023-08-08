@@ -18,7 +18,9 @@ export const createToken = (user: User | null) => {
 };
 
 export const validateToken: RequestHandler = (req, res, next) => {
-  const accessToken = req.cookies.token;
+  
+  const accessToken = req.headers.token?.toString();
+  
   if (!accessToken)
     return res.status(400).json({ error: "User not authenticated" });
 

@@ -26,28 +26,25 @@ export const newUser: RequestHandler = (req, res) => {
 export const authUser: RequestHandler = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ where: { email: email } });
-  //try {
-    
-    if (!user){
-      res.status(400).json({ error: "No user registered with this email" });
-      //throw new Error("No user registered with this email");
-      
-    } else {
-      const hashedPassword = user?.password;
-      bcrypt.compare(password, hashedPassword ?? "").then((match) => {
-        if (!match) {
-          res.status(400).json({
-            error:
-              "Incorrect password. Please verify the email and password you have entered",
-          });
-        } else {
-          const accessToken = createToken(user);
-          const { id, firstname, lastname, email } = user;
-          res.cookie("token", accessToken).json({ id, firstname, lastname, email });
-        }
-      });
-    }
-  /* } catch (error) {
-    res.status(401).json(error);
-  } */
+
+  if (!user) {
+    res.status(400).json({ error: "No user registered with this email" });
+  } else {
+    const hashedPassword = user?.password;
+    bcrypt.compare(password, hashedPassword ?? "").then((match) => {
+      if (!match) {
+        res.status(400).json({
+          error:
+            "Incorrect password. Please verify the email and password you have entered",
+        });
+      } else {
+        const accessToken = createToken(user);
+        const { id, firstname, lastname, email } = user;
+        res.json({
+          user: { id, firstname, lastname, email },
+          token: accessToken,
+        });
+      }
+    });
+  }
 };
