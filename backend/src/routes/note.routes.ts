@@ -3,7 +3,7 @@ import { deleteNote, editNote, listNotes, newNote, toggleNoteStatus } from "../c
 
 const NoteRoutes = Router();
 
-NoteRoutes.get("/all/:userId", listNotes);
+NoteRoutes.get("/:userId/:notesStatus", listNotes);
 NoteRoutes.post("/new/:userId", newNote);
 NoteRoutes.delete("/delete/:id", deleteNote);
 NoteRoutes.put("/edit/:id", editNote);

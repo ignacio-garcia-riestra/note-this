@@ -2,9 +2,10 @@ import { RequestHandler } from "express";
 import { Note } from "../models/note.model";
 
 export const listNotes: RequestHandler = async (req, res) => {
+  const is_active = req.params.notesStatus === "active";
   const user_id = Number(req.params.userId);
   try {
-    const notes: Array<Note> = await Note.findAll({ where: { user_id } });
+    const notes: Array<Note> = await Note.findAll({ where: { user_id, is_active } });
     return res.json(notes);
   } catch (error) {
     return res.status(500).json({

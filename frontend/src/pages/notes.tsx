@@ -11,14 +11,19 @@ export default function Notes() {
   const router = useRouter();
   const user = router.query;
   const userId: string = user.id?.toString() || "";
+  const [notesStatus, setNotesStatus] = useState("active");
   const [cookie, setCookie] = useCookies(["token"]);
   const initialNotesState: Array<Note> = [];
   const [notes, setNotes] = useState(initialNotesState);
 
   const fetchNotes = (userId: string) => {
     return axios
-      .get(`http://localhost:5000/api/notes/all/${userId}`)
+      .get(`http://localhost:5000/api/notes/${userId}/${notesStatus}`)
       .then((res) => res.data);
+  };
+
+  const notesStatusToggler = () => {
+    setNotesStatus(notesStatus === "active" ? "archived" : "active");
   };
 
   useEffect(() => {
@@ -32,7 +37,7 @@ export default function Notes() {
         .then(() => fetchNotes(userId))
         .then((notes) => setNotes(notes));
     }
-  }, [cookie]);
+  }, [cookie, notesStatus]);
 
   return (
     <div className="bg-white flex flex-col place-items-center min-h-screen">
@@ -46,11 +51,13 @@ export default function Notes() {
           Create new note
         </button>
         <button
-          className="bg-slate-00 text-slate-50 font-inter font-bold text-lg
-                              w-auto px-2 h-11 rounded-lg"
-          onClick={() => {}}
+          className={`bg-${
+            notesStatus === "active" ? "slate" : "blue"
+          }-400 text-slate-50 font-inter font-bold text-lg
+                              w-auto px-2 h-11 rounded-lg`}
+          onClick={notesStatusToggler}
         >
-          Archived notes
+          {notesStatus === "active" ? "Archived notes" : "Active notes"}
         </button>
         <button
           className="bg-red-400 text-slate-50 font-inter font-bold text-lg
@@ -80,9 +87,13 @@ export default function Notes() {
                         {note.title}
                       </h1>
                       <div className="bg-green-100 flex flex-row justify-around self-end w-1/4 h-full pt-1.5 rounded-md">
-                        <div>
-                          <MdArchive className="text-3xl" />
-                        </div>
+                        <button>
+                          {notesStatus === "active" ? (
+                            <MdArchive className="text-3xl" />
+                          ) : (
+                            <MdUnarchive className="text-3xl" />
+                          )}
+                        </button>
                         <div>
                           <MdEdit className="text-3xl" />
                         </div>
