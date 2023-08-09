@@ -9,6 +9,7 @@ import axios from "axios";
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [toMatchPassword, setToMatchPassword] = useState("");
   const router = useRouter();
 
@@ -187,25 +188,25 @@ export default function Register() {
                   <Field
                     id="confirmPassword"
                     name="confirmPassword"
-                    type={!showPassword ? "password" : "text"}
+                    type={!showConfirmPassword ? "password" : "text"}
                     className={`w-full h-12 rounded-lg px-2 mt-2 pr-12 font-inter font-medium text-black-am focus:outline-none focus:border-2 focus:border-blue-200 focus:shadow-sm focus:shadow-blue-200 ${
                       errors.confirmPassword &&
                       touched.confirmPassword &&
                       "border-2 border-red-400"
                     }`}
                   />
-                  {!showPassword ? (
+                  {!showConfirmPassword ? (
                     <RiEyeOffLine
                       className="w-5 h-4 -mt-8 mr-5 text-black self-end"
                       onClick={() =>
-                        setShowPassword((showPassword) => !showPassword)
+                        setShowConfirmPassword((showConfirmPassword) => !showConfirmPassword)
                       }
                     />
                   ) : (
                     <RiEyeLine
                       className="w-5 h-4 -mt-8 mr-5 text-black self-end"
                       onClick={() =>
-                        setShowPassword((showPassword) => !showPassword)
+                        setShowConfirmPassword((showConfirmPassword) => !showConfirmPassword)
                       }
                     />
                   )}
