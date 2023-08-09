@@ -199,14 +199,18 @@ export default function Register() {
                     <RiEyeOffLine
                       className="w-5 h-4 -mt-8 mr-5 text-black self-end"
                       onClick={() =>
-                        setShowConfirmPassword((showConfirmPassword) => !showConfirmPassword)
+                        setShowConfirmPassword(
+                          (showConfirmPassword) => !showConfirmPassword
+                        )
                       }
                     />
                   ) : (
                     <RiEyeLine
                       className="w-5 h-4 -mt-8 mr-5 text-black self-end"
                       onClick={() =>
-                        setShowConfirmPassword((showConfirmPassword) => !showConfirmPassword)
+                        setShowConfirmPassword(
+                          (showConfirmPassword) => !showConfirmPassword
+                        )
                       }
                     />
                   )}

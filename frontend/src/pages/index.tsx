@@ -31,7 +31,7 @@ export default function Home(): JSX.Element {
         "http://localhost:5000/api/users/auth",
         values
       );
-      const loggedUser = response.data;
+      const loggedUser = response.data.user;
       setCookie("token", response.data.token, {
         path: "/",
         sameSite: true,
@@ -52,6 +52,8 @@ export default function Home(): JSX.Element {
     <div className="flex flex-col place-items-center min-h-screen">
       <h1 className="font-medium text-4xl mt-14">WELCOME TO noteTHIS</h1>
       <h3 className="mt-12 mb-6 font-semibold text-2xl">LOGIN</h3>
+      <h3 className="mt-6 mb-6 font-semibold text-2xl">default@mail.com</h3>
+      <h3 className="mt-6 mb-6 font-semibold text-2xl">Default123</h3>
       <div>
         <Formik
           initialValues={{

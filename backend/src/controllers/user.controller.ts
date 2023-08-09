@@ -39,7 +39,7 @@ export const authUser: RequestHandler = async (req, res) => {
         });
       } else {
         const accessToken = createToken(user);
-        const { id, firstname, lastname, email } = user;
+        const { id, firstname, lastname, email } = user.dataValues;
         res.json({
           user: { id, firstname, lastname, email },
           token: accessToken,
