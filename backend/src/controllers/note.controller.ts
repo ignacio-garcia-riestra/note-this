@@ -18,8 +18,11 @@ export const listNotes: RequestHandler = async (req, res) => {
 export const newNote: RequestHandler = async (req, res) => {
     const user_id = Number(req.params.userId);
     try {
-      await Note.create({ ...req.body, user_id })
+      const note = await Note.create({ ...req.body, user_id })
+      .then(res => res.dataValues);
+      const { id, title, content } = note;
       return res.status(201).json({
+        data: { id, title, content },
         message: "New note created"
       })
     } catch (error) {
