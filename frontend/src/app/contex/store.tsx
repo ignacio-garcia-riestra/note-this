@@ -7,29 +7,46 @@ import {
   useState,
 } from "react";
 import { Note } from "../interfaces/Note";
+import { NoteToModify } from "../interfaces/NoteToModify";
 
 interface ContextProps {
   loggedUserId: string;
   setLoggerUserId: Dispatch<SetStateAction<string>>;
   modalIsOpen: boolean;
   setModalIsOpen: Dispatch<SetStateAction<boolean>>;
-  data: Array<Note>;
-  setData: Dispatch<SetStateAction<Array<Note>>>;
+  userNotes: Array<Note>;
+  setUserNotes: Dispatch<SetStateAction<Array<Note>>>;
+  noteToModify: NoteToModify;
+  setNoteToModify: Dispatch<SetStateAction<NoteToModify>>;
+  emptyNoteToModify: NoteToModify;
 }
+
+const emptyNoteToModify: NoteToModify = {
+  note: {
+    id: "",
+    title: "",
+    content: "",
+  },
+  action: "",
+};
 
 const GlobalContext = createContext<ContextProps>({
   loggedUserId: "",
   setLoggerUserId: (): string => "",
   modalIsOpen: false,
   setModalIsOpen: (): boolean => false,
-  data: [],
-  setData: (): Array<Note> => [],
+  userNotes: [],
+  setUserNotes: (): Array<Note> => [],
+  noteToModify: emptyNoteToModify,
+  setNoteToModify: (): NoteToModify => emptyNoteToModify,
+  emptyNoteToModify
 });
 
 export const GlobalContextProvider = ({ children }) => {
   const [loggedUserId, setLoggerUserId] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [data, setData] = useState<[] | Array<Note>>([]);
+  const [userNotes, setUserNotes] = useState<[] | Array<Note>>([]);
+  const [noteToModify, setNoteToModify] = useState(emptyNoteToModify);
 
   return (
     <GlobalContext.Provider
@@ -38,8 +55,11 @@ export const GlobalContextProvider = ({ children }) => {
         setLoggerUserId,
         modalIsOpen,
         setModalIsOpen,
-        data,
-        setData,
+        userNotes,
+        setUserNotes,
+        noteToModify,
+        setNoteToModify,
+        emptyNoteToModify
       }}
     >
       {children}

@@ -3,8 +3,16 @@ import { Field, Form, Formik } from "formik";
 import { Note } from "../interfaces/Note";
 import axios from "axios";
 
-export const CreateOrEditNoteModal = (initialNoteData: Note) => {
-  const { loggedUserId, modalIsOpen, setModalIsOpen } = useGlobalContext();
+export const CreateOrEditNoteModal = () => {
+  const {
+    setUserNotes,
+    loggedUserId,
+    noteToModify,
+    setNoteToModify,
+    emptyNoteToModify,
+    modalIsOpen,
+    setModalIsOpen,
+  } = useGlobalContext();
 
   const onCreateOrEditNoteHandler = async (noteToCreateOrEdit: Note) => {
     if (!noteToCreateOrEdit.id) {
@@ -15,7 +23,7 @@ export const CreateOrEditNoteModal = (initialNoteData: Note) => {
             `http://localhost:5000/api/notes/new/${loggedUserId}`,
             noteToCreateOrEdit
           )
-          .then(res => alert(res.data.message));
+          .then((res) => alert(res.data.message));
       } catch (err: any) {
         alert(err.response.data.error);
       }
@@ -28,19 +36,23 @@ export const CreateOrEditNoteModal = (initialNoteData: Note) => {
             `http://localhost:5000/api/notes/edit/${noteId}`,
             noteToCreateOrEdit
           )
-          .then(res => alert(res.data.message));
+          .then((res) => {
+            alert(res.data.message);
+          });
       } catch (err: any) {
         alert(err.response.data.error);
       }
     }
-    setModalIsOpen(false)
+    setNoteToModify(emptyNoteToModify);
+    setUserNotes([]);
+    setModalIsOpen(false);
   };
 
   return modalIsOpen ? (
     <div className="bg-red-200 p-12">
       <h1></h1>
       <Formik
-        initialValues={initialNoteData}
+        initialValues={noteToModify.note}
         onSubmit={onCreateOrEditNoteHandler}
       >
         <Form>
