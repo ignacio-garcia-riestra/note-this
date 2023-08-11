@@ -15,8 +15,7 @@ export const CreateOrEditNoteModal = (initialNoteData: Note) => {
             `http://localhost:5000/api/notes/new/${loggedUserId}`,
             noteToCreateOrEdit
           )
-          .then((res) => alert(res.data.message))
-          .then(() => setModalIsOpen(false));
+          .then(res => alert(res.data.message));
       } catch (err: any) {
         alert(err.response.data.error);
       }
@@ -29,12 +28,12 @@ export const CreateOrEditNoteModal = (initialNoteData: Note) => {
             `http://localhost:5000/api/notes/edit/${noteId}`,
             noteToCreateOrEdit
           )
-          .then((res) => alert(res.data.message))
-          .then(() => setModalIsOpen(false));
+          .then(res => alert(res.data.message));
       } catch (err: any) {
         alert(err.response.data.error);
       }
     }
+    setModalIsOpen(false)
   };
 
   return modalIsOpen ? (
@@ -55,7 +54,7 @@ export const CreateOrEditNoteModal = (initialNoteData: Note) => {
           </div>
 
           <div>
-            <button onClick={() => {}}>Cancel</button>
+            <button onClick={() => setModalIsOpen(false)}>Cancel</button>
             <button type="submit">Save</button>
           </div>
         </Form>

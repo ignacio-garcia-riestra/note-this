@@ -44,10 +44,13 @@ export default function Notes() {
         })
         .then(() => {
           if (loggedUserId)
-            fetchNotes(loggedUserId).then((notes) => setNotes(notes));
+            fetchNotes(loggedUserId).then((notes) => {
+              setNotes(notes);
+              setNoteToCreateOrEdit(emptyNote);
+            });
         });
     }
-  }, [cookie, notesStatus]);
+  }, [cookie, notesStatus, modalIsOpen]);
 
   return (
     <div className="bg-white flex flex-col place-items-center min-h-screen">
