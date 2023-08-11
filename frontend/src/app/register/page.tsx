@@ -1,7 +1,8 @@
-import "../app/globals.css";
+"use client";
+import "../globals.css";
 import { Field, Form, Formik } from "formik";
 import * as yup from "yup";
-import router, { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { BiErrorCircle } from "react-icons/bi";
 import { useState } from "react";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
@@ -10,7 +11,6 @@ import axios from "axios";
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [toMatchPassword, setToMatchPassword] = useState("");
   const router = useRouter();
 
   const validationSchema = yup.object({
@@ -278,7 +278,7 @@ export default function Register() {
         className="bg-blue-300 text-white font-inter font-bold text-lg
                   w-28 h-11 rounded-lg self-center"
         onClick={() => {
-          router.push("/");
+          router.replace("/");
         }}
       >
         Login

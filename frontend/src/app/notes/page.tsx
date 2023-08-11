@@ -1,20 +1,28 @@
+"use client";
 import axios from "axios";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import "../app/globals.css";
+import "../globals.css";
 import { useCookies } from "react-cookie";
-import { Note } from "../../interfaces/Note";
+import { Note } from "../interfaces/Note";
 import { MdArchive, MdUnarchive, MdEdit } from "react-icons/md";
 import { FaTrashCan, FaNoteSticky } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
+import { useGlobalContext } from "@/app/contex/store";
+import { CreateOrEditNoteModal } from "../components/CreateOrEditNoteModal";
 
 export default function Notes() {
   const router = useRouter();
-  const user = router.query;
-  const userId: string = user.id?.toString() || "";
+  const { loggedUserId, modalIsOpen, setModalIsOpen } = useGlobalContext();
   const [notesStatus, setNotesStatus] = useState("active");
   const [cookie, setCookie] = useCookies(["token"]);
   const initialNotesState: Array<Note> = [];
   const [notes, setNotes] = useState(initialNotesState);
+  const emptyNote: Note = {
+    id: "",
+    title: "",
+    content: "",
+  };
+  const [noteToCreateOrEdit, setNoteToCreateOrEdit] = useState(emptyNote);
 
   const fetchNotes = (userId: string) => {
     return axios
@@ -34,8 +42,10 @@ export default function Notes() {
         .get("http://localhost:5000/api/users/profile", {
           headers: cookie,
         })
-        .then(() => fetchNotes(userId))
-        .then((notes) => setNotes(notes));
+        .then(() => {
+          if (loggedUserId)
+            fetchNotes(loggedUserId).then((notes) => setNotes(notes));
+        });
     }
   }, [cookie, notesStatus]);
 
@@ -46,7 +56,7 @@ export default function Notes() {
         <button
           className="bg-green-400 text-slate-50 font-inter font-bold text-lg
                               w-auto px-2 h-11 rounded-lg"
-          onClick={() => {}}
+          onClick={() => setModalIsOpen(true)}
         >
           Create new note
         </button>
@@ -69,6 +79,8 @@ export default function Notes() {
           Logout
         </button>
       </div>
+
+      {modalIsOpen && <CreateOrEditNoteModal {...noteToCreateOrEdit} />}
 
       <main>
         {notes.length && (
@@ -94,7 +106,12 @@ export default function Notes() {
                             <MdUnarchive className="text-3xl" />
                           )}
                         </button>
-                        <div>
+                        <div
+                          onClick={() => {
+                            setNoteToCreateOrEdit(note);
+                            setModalIsOpen(true);
+                          }}
+                        >
                           <MdEdit className="text-3xl" />
                         </div>
                         <div>

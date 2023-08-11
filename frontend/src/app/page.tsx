@@ -1,3 +1,5 @@
+"use client";
+import { useGlobalContext } from "@/app/contex/store";
 import "../app/globals.css";
 import { Field, Formik, Form } from "formik";
 import * as yup from "yup";
@@ -5,7 +7,7 @@ import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import { BiErrorCircle } from "react-icons/bi";
 import axios from "axios";
 import { useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useCookies } from "react-cookie";
 
 const validationSchema = yup.object({
@@ -21,6 +23,7 @@ const validationSchema = yup.object({
 });
 
 export default function Home(): JSX.Element {
+  const { setLoggerUserId } = useGlobalContext();
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const [cookie, setCookie] = useCookies(["token"]);
@@ -32,17 +35,12 @@ export default function Home(): JSX.Element {
         values
       );
       const loggedUser = response.data.user;
+      setLoggerUserId(loggedUser.id);
       setCookie("token", response.data.token, {
         path: "/",
         sameSite: true,
       });
-      router.push(
-        {
-          pathname: "/notes",
-          query: loggedUser,
-        },
-        "/myNotes"
-      );
+      router.replace("/notes");
     } catch (err: any) {
       alert(err.response.data.error);
     }
@@ -51,9 +49,13 @@ export default function Home(): JSX.Element {
   return (
     <div className="flex flex-col place-items-center min-h-screen">
       <h1 className="font-medium text-4xl mt-14">WELCOME TO noteTHIS</h1>
-      <h3 className="mt-12 mb-6 font-semibold text-2xl">LOGIN</h3>
+
+      {/* email and password for use while developing only - remove before final commit */}
       <h3 className="mt-6 mb-6 font-semibold text-2xl">default@mail.com</h3>
       <h3 className="mt-6 mb-6 font-semibold text-2xl">Default123</h3>
+      {/* ----------------------------------------------------------------------------- */}
+
+      <h3 className="mt-12 mb-6 font-semibold text-2xl">LOGIN</h3>
       <div>
         <Formik
           initialValues={{
