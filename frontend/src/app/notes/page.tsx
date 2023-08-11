@@ -41,6 +41,8 @@ export default function Notes() {
 
   useEffect(() => {
     if (!cookie.token) {
+      setNotesStatus("active")
+      setUserNotes([])
       router.replace("/");
     } else {
       axios.get("http://localhost:5000/api/users/profile/", {
