@@ -41,8 +41,8 @@ export default function Notes() {
 
   useEffect(() => {
     if (!cookie.token) {
-      setNotesStatus("active")
-      setUserNotes([])
+      setNotesStatus("active");
+      setUserNotes([]);
       router.replace("/");
     } else {
       axios.get("http://localhost:5000/api/users/profile/", {
@@ -62,8 +62,10 @@ export default function Notes() {
         >
           Create new note
         </button>
-        <button 
-          className={`bg-${notesStatus === "active" ? "slate" : "blue"}-400 text-slate-50 font-inter font-bold text-lg w-auto px-2 h-11 rounded-lg`}
+        <button
+          className={`bg-${
+            notesStatus === "active" ? "slate" : "blue"
+          }-400 text-slate-50 font-inter font-bold text-lg w-auto px-2 h-11 rounded-lg`}
           onClick={notesStatusToggler}
         >
           {notesStatus === "active" ? "Archived notes" : "Active notes"}
@@ -87,21 +89,24 @@ export default function Notes() {
 
       <main>
         {userNotes.length && (
-          <div className="bg-cork-pad bg-cover p-4 flex flex-row justify-between flex-wrap mt-20 mx-auto w-3/4 self-center rounded-2xl">
+          <div className="bg-cork-pad bg-cover w-[886px] min-h-[720px] grid grid-cols-2  place-content-start py-6 mt-12 rounded-2xl">
             {userNotes.map((note: Note) => {
               return (
-                <div className="min-h-[120px] w-1/2 my-3" key={note.id}>
-                  <div className="bg-green-200 p-4 flex flex-row h-full mx-3 rounded-xl">
-                    <div className="w-1/5">
-                      {/* Acá un ícono de nota que al clickearlo da detalles */}
-                      <FaNoteSticky className="text-8xl" />
-                    </div>
+                <div
+                  className="bg-green-200 h-[124px] w-[396px] p-4 flex flex-row my-3 mx-auto rounded-xl"
+                  key={note.id}
+                >
+                  <div className="w-1/5 mr-3">
+                    {/* Acá un ícono de nota que al clickearlo da detalles */}
+                    <FaNoteSticky className="text-8xl" />
+                  </div>
 
-                    <div className="w-4/5 flex flex-col">
-                      <h1 className="text-xl font-semibold self-center m-3">
-                        {note.title}
-                      </h1>
-                      <div className="bg-green-100 flex flex-row justify-around self-end w-1/4 h-full pt-1.5 rounded-md">
+                  <div className="w-4/5 flex flex-col mt-2">
+                    <h1 className="text-xl font-semibold self-center">
+                      {note.title}
+                    </h1>
+                    <div className="relative h-full">
+                      <div className="bg-green-100 absolute right-0 bottom-0 flex flex-row justify-around w-2/5  pt-1.5 rounded-md">
                         <button>
                           {notesStatus === "active" ? (
                             <MdArchive className="text-3xl" />
