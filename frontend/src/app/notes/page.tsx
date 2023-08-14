@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { useGlobalContext } from "@/app/contex/store";
 import { CreateOrEditNoteModal } from "../components/CreateOrEditNoteModal";
 import { DeleteNoteModal } from "../components/DeleteNoteModal";
+import { ToggleNoteStatusModal } from "../components/ToggleNoteStatusModal";
 
 export default function Notes() {
   const router = useRouter();
@@ -63,9 +64,7 @@ export default function Notes() {
           Create new note
         </button>
         <button
-          className={`bg-${
-            notesStatus === "active" ? "slate" : "blue"
-          }-400 text-slate-50 font-inter font-bold text-lg w-auto px-2 h-11 rounded-lg`}
+          className={`bg-slate-400 text-slate-50 font-inter font-bold text-lg w-auto px-2 h-11 rounded-lg`}
           onClick={notesStatusToggler}
         >
           {notesStatus === "active" ? "Archived notes" : "Active notes"}
@@ -83,14 +82,16 @@ export default function Notes() {
 
       {modalIsOpen && noteToModify.action === "delete" ? (
         <DeleteNoteModal />
+      ) : modalIsOpen && noteToModify.action === ("archive" || "restore") ? (
+        modalIsOpen && <ToggleNoteStatusModal />
       ) : (
         modalIsOpen && <CreateOrEditNoteModal />
       )}
 
       <main>
-        {userNotes.length && (
-          <div className="bg-cork-pad bg-cover w-[886px] min-h-[720px] grid grid-cols-2  place-content-start py-6 mt-12 rounded-2xl">
-            {userNotes.map((note: Note) => {
+        <div className="bg-cork-pad bg-cover w-[886px] min-h-[720px] grid grid-cols-2  place-content-start py-6 mt-12 rounded-2xl">
+          {!!userNotes.length &&
+            userNotes.map((note: Note) => {
               return (
                 <div
                   className="bg-green-200 h-[124px] w-[396px] p-4 flex flex-row my-3 mx-auto rounded-xl"
@@ -107,13 +108,24 @@ export default function Notes() {
                     </h1>
                     <div className="relative h-full">
                       <div className="bg-green-100 absolute right-0 bottom-0 flex flex-row justify-around w-2/5  pt-1.5 rounded-md">
-                        <button>
+                        <div
+                          onClick={() => {
+                            setNoteToModify({
+                              note,
+                              action:
+                                notesStatus === "active"
+                                  ? "archive"
+                                  : "restore",
+                            });
+                            setModalIsOpen(true);
+                          }}
+                        >
                           {notesStatus === "active" ? (
                             <MdArchive className="text-3xl" />
                           ) : (
                             <MdUnarchive className="text-3xl" />
                           )}
-                        </button>
+                        </div>
                         <div
                           onClick={() => {
                             setNoteToModify({ note, action: "edit" });
@@ -136,8 +148,7 @@ export default function Notes() {
                 </div>
               );
             })}
-          </div>
-        )}
+        </div>
       </main>
     </div>
   );
