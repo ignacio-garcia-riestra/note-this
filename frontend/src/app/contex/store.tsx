@@ -10,8 +10,6 @@ import { Note } from "../interfaces/Note";
 import { NoteToModify } from "../interfaces/NoteToModify";
 
 interface ContextProps {
-  loggedUserId: string;
-  setLoggerUserId: Dispatch<SetStateAction<string>>;
   modalIsOpen: boolean;
   setModalIsOpen: Dispatch<SetStateAction<boolean>>;
   userNotes: Array<Note>;
@@ -31,8 +29,6 @@ const emptyNoteToModify: NoteToModify = {
 };
 
 const GlobalContext = createContext<ContextProps>({
-  loggedUserId: "",
-  setLoggerUserId: (): string => "",
   modalIsOpen: false,
   setModalIsOpen: (): boolean => false,
   userNotes: [],
@@ -43,7 +39,6 @@ const GlobalContext = createContext<ContextProps>({
 });
 
 export const GlobalContextProvider = ({ children }) => {
-  const [loggedUserId, setLoggerUserId] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [userNotes, setUserNotes] = useState<[] | Array<Note>>([]);
   const [noteToModify, setNoteToModify] = useState(emptyNoteToModify);
@@ -51,8 +46,6 @@ export const GlobalContextProvider = ({ children }) => {
   return (
     <GlobalContext.Provider
       value={{
-        loggedUserId,
-        setLoggerUserId,
         modalIsOpen,
         setModalIsOpen,
         userNotes,

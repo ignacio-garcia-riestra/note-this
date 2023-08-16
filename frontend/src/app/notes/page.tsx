@@ -2,7 +2,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import "../globals.css";
-import { useCookies } from "react-cookie";
 import { Note } from "../interfaces/Note";
 import { MdArchive, MdUnarchive, MdEdit } from "react-icons/md";
 import { FaTrashCan, FaNoteSticky } from "react-icons/fa6";
@@ -19,12 +18,14 @@ export default function Notes() {
     setUserNotes,
     noteToModify,
     setNoteToModify,
-    loggedUserId,
     modalIsOpen,
     setModalIsOpen,
   } = useGlobalContext();
   const [notesStatus, setNotesStatus] = useState("active");
-  const [cookie, setCookie] = useCookies(["token"]);
+  const tokenInitialValue = sessionStorage.getItem("token");
+  const [token] = useState(tokenInitialValue);
+  const userIdInitialValue = sessionStorage.getItem("userId");
+  const [userId] = useState(userIdInitialValue);
 
   const notesStatusToggler = () => {
     setNotesStatus(notesStatus === "active" ? "archived" : "active");
@@ -34,22 +35,22 @@ export default function Notes() {
   const fetchUserNotes = () => {
     !userNotes.length &&
       axios
-        .get(`http://localhost:5000/api/notes/${loggedUserId}/${notesStatus}`)
+        .get(`http://localhost:5000/api/notes/${userId}/${notesStatus}`)
         .then((res) => setUserNotes(res.data));
   };
 
   useEffect(() => {
-    if (!cookie.token) {
+    if (!token) {
       setNotesStatus("active");
       setUserNotes([]);
       router.replace("/");
     } else {
       axios.get("http://localhost:5000/api/users/profile/", {
-        headers: cookie,
+        headers: { token },
       });
     }
     fetchUserNotes();
-  }, [cookie, userNotes.length, notesStatus]);
+  }, [token, userNotes.length, notesStatus]);
 
   return (
     <div className="bg-white flex flex-col place-items-center min-h-screen">
@@ -73,7 +74,8 @@ export default function Notes() {
             className="bg-red-400 text-slate-50 font-inter font-bold text-lg
                                 w-28 h-11 rounded-lg"
             onClick={() => {
-              setCookie("token", "");
+              sessionStorage.removeItem("token");
+              sessionStorage.removeItem("userId");
             }}
           >
             Logout

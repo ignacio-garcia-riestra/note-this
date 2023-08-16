@@ -1,5 +1,4 @@
 "use client";
-import { useGlobalContext } from "@/app/contex/store";
 import "../app/globals.css";
 import { Field, Formik, Form } from "formik";
 import * as yup from "yup";
@@ -8,7 +7,6 @@ import { BiErrorCircle } from "react-icons/bi";
 import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useCookies } from "react-cookie";
 
 const validationSchema = yup.object({
   email: yup
@@ -23,10 +21,8 @@ const validationSchema = yup.object({
 });
 
 export default function Home(): JSX.Element {
-  const { setLoggerUserId } = useGlobalContext();
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  const [cookie, setCookie] = useCookies(["token"]);
 
   const onLoginHandler = async (values: any) => {
     try {
@@ -35,11 +31,8 @@ export default function Home(): JSX.Element {
         values
       );
       const loggedUser = response.data.user;
-      setLoggerUserId(loggedUser.id);
-      setCookie("token", response.data.token, {
-        path: "/",
-        sameSite: true,
-      });
+      sessionStorage.setItem("token", response.data.token);
+      sessionStorage.setItem("userId", loggedUser.id);
       router.replace("/notes");
     } catch (err: any) {
       alert(err.response.data.error);
