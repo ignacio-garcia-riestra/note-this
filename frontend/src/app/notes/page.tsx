@@ -38,8 +38,7 @@ export default function Notes() {
         .then((res) => setUserNotes(res.data));
   };
 
-  fetchUserNotes();
-
+  
   useEffect(() => {
     if (!cookie.token) {
       setNotesStatus("active");
@@ -50,7 +49,8 @@ export default function Notes() {
         headers: cookie,
       });
     }
-  }, [cookie]);
+    fetchUserNotes();
+  }, [cookie, userNotes.length, notesStatus]);
 
   return (
     <div className="bg-white flex flex-col place-items-center min-h-screen">
