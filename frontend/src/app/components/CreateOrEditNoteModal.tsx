@@ -49,25 +49,63 @@ export const CreateOrEditNoteModal = () => {
   };
 
   return modalIsOpen ? (
-    <div className="bg-red-200 p-12">
-      <h1></h1>
+    <div className="bg-slate-200 opacity-100 fixed mx-auto top-32 w-[480px] h-fit px-12 py-6 rounded-xl">
+      <h4 className="mb-4 font-semibold text-2xl text-center">
+        Edit or create new note
+      </h4>
       <Formik
         initialValues={noteToModify.note}
         onSubmit={onCreateOrEditNoteHandler}
       >
-        <Form>
-          <div>
-            <label htmlFor="title">Title</label>
-            <Field id="title" name="title" type="text"></Field>
+        <Form className="flex flex-col">
+          <div className="flex flex-col w-full">
+            <label
+              htmlFor="title"
+              className="font-inter font-medium text-lg text-grey-am ml-2 my-1"
+            >
+              Title
+            </label>
+            <Field
+              id="title"
+              name="title"
+              type="text"
+              className="h-10 rounded-lg px-2 mb-4 font-inter font-medium text-black"
+            />
           </div>
-          <div>
-            <label htmlFor="content">Content</label>
-            <Field id="content" name="content" type="textarea"></Field>
+          <div className="flex flex-col w-full">
+            <label
+              htmlFor="content"
+              className="font-inter font-medium text-lg text-grey-am ml-2 my-1"
+            >
+              Content
+            </label>
+            <Field
+              id="content"
+              name="content"
+              type="text"
+              as="textarea"
+              className="h-24 rounded-lg px-2 pt-1.5 mb-4 font-inter font-medium text-black content-start"
+            />
           </div>
 
-          <div>
-            <button onClick={() => setModalIsOpen(false)}>Cancel</button>
-            <button type="submit">Save</button>
+          <div className="mt-4 flex flex-row w-2/3 self-center justify-between">
+            <button
+              className="bg-red-400 text-white font-inter font-bold text-lg
+                w-28 h-11 rounded-lg self-center"
+              onClick={() => {
+                setNoteToModify(emptyNoteToModify);
+                setModalIsOpen(false);
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              className="bg-green-400 text-white font-inter font-bold text-lg
+                w-28 h-11 rounded-lg self-center"
+              type="submit"
+            >
+              Save
+            </button>
           </div>
         </Form>
       </Formik>
