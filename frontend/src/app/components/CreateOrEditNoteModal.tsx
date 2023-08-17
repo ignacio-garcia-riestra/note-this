@@ -2,17 +2,19 @@ import { useGlobalContext } from "../contex/store";
 import { Field, Form, Formik } from "formik";
 import { Note } from "../interfaces/Note";
 import axios from "axios";
+import { useState } from "react";
 
 export const CreateOrEditNoteModal = () => {
   const {
     setUserNotes,
-    loggedUserId,
     noteToModify,
     setNoteToModify,
     emptyNoteToModify,
     modalIsOpen,
     setModalIsOpen,
   } = useGlobalContext();
+  const userIdInitialValue = sessionStorage.getItem("userId");
+  const [userId] = useState(userIdInitialValue);
 
   const onCreateOrEditNoteHandler = async (noteToCreateOrEdit: Note) => {
     if (!noteToCreateOrEdit.id) {
@@ -20,7 +22,7 @@ export const CreateOrEditNoteModal = () => {
         delete noteToCreateOrEdit.id;
         await axios
           .post(
-            `http://localhost:5000/api/notes/new/${loggedUserId}`,
+            `http://localhost:5000/api/notes/new/${userId}`,
             noteToCreateOrEdit
           )
           .then((res) => alert(res.data.message));
