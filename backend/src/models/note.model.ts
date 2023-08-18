@@ -2,26 +2,31 @@ import { Column, DataType, Model, Table } from "sequelize-typescript";
 
 @Table({
   timestamps: false,
-  tableName: 'notes'
+  tableName: "notes",
 })
-
 export class Note extends Model {
   @Column({
     type: DataType.STRING,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      len: [2, 26],
+    },
   })
-  title!: string
+  title!: string;
 
   @Column({
     type: DataType.STRING,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      len: [2, 250],
+    },
   })
-  content!: string
+  content!: string;
 
   @Column({
     type: DataType.BOOLEAN,
     allowNull: false,
-    defaultValue: true
+    defaultValue: true,
   })
-  is_active!: boolean
+  is_active!: boolean;
 }
