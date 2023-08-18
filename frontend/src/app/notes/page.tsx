@@ -23,7 +23,7 @@ export default function Notes() {
   } = useGlobalContext();
   const [notesStatus, setNotesStatus] = useState("active");
   const tokenInitialValue = sessionStorage.getItem("token");
-  const [token] = useState(tokenInitialValue);
+  const [token, setToken] = useState(tokenInitialValue);
   const userIdInitialValue = sessionStorage.getItem("userId");
   const [userId] = useState(userIdInitialValue);
 
@@ -33,10 +33,9 @@ export default function Notes() {
   };
 
   const fetchUserNotes = () => {
-    !userNotes.length &&
-      axios
-        .get(`http://localhost:5000/api/notes/${userId}/${notesStatus}`)
-        .then((res) => setUserNotes(res.data));
+    axios
+      .get(`http://localhost:5000/api/notes/${userId}/${notesStatus}`)
+      .then((res) => setUserNotes(res.data));
   };
 
   useEffect(() => {
@@ -45,11 +44,12 @@ export default function Notes() {
       setUserNotes([]);
       router.replace("/");
     } else {
-      axios.get("http://localhost:5000/api/users/profile/", {
-        headers: { token },
-      });
+      axios
+        .get("http://localhost:5000/api/users/profile/", {
+          headers: { token },
+        })
+        .then(() => fetchUserNotes());
     }
-    fetchUserNotes();
   }, [token, userNotes.length, notesStatus]);
 
   return (
@@ -60,7 +60,10 @@ export default function Notes() {
           <button
             className="bg-green-400 text-slate-50 font-inter font-bold text-lg
                                 w-auto px-2 h-11 rounded-lg"
-            onClick={() => setModalIsOpen(true)}
+            onClick={() => {
+              setNotesStatus("active");
+              setModalIsOpen(true);
+            }}
           >
             Create new note
           </button>
@@ -74,6 +77,7 @@ export default function Notes() {
             className="bg-red-400 text-slate-50 font-inter font-bold text-lg
                                 w-28 h-11 rounded-lg"
             onClick={() => {
+              setToken("");
               sessionStorage.removeItem("token");
               sessionStorage.removeItem("userId");
             }}

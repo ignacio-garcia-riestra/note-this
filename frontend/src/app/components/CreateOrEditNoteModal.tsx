@@ -6,6 +6,7 @@ import { useState } from "react";
 
 export const CreateOrEditNoteModal = () => {
   const {
+    userNotes,
     setUserNotes,
     noteToModify,
     setNoteToModify,
@@ -25,10 +26,13 @@ export const CreateOrEditNoteModal = () => {
             `http://localhost:5000/api/notes/new/${userId}`,
             noteToCreateOrEdit
           )
-          .then((res) => alert(res.data.message));
+          .then(res => {
+            setUserNotes([...userNotes, res.data.data]);
+            alert(res.data.message);
+          });
       } catch (err: any) {
         alert(err.response.data.error);
-      }
+      };
     } else {
       try {
         const noteId = noteToCreateOrEdit.id;
@@ -38,22 +42,22 @@ export const CreateOrEditNoteModal = () => {
             `http://localhost:5000/api/notes/edit/${noteId}`,
             noteToCreateOrEdit
           )
-          .then((res) => {
+          .then(res => {
             alert(res.data.message);
           });
       } catch (err: any) {
         alert(err.response.data.error);
-      }
+      };
+      setUserNotes([]);
     }
     setNoteToModify(emptyNoteToModify);
-    setUserNotes([]);
     setModalIsOpen(false);
   };
 
   return modalIsOpen ? (
     <div className="bg-slate-200 opacity-100 fixed mx-auto top-32 w-[480px] h-fit px-12 py-6 rounded-xl">
       <h4 className="mb-4 font-semibold text-2xl text-center">
-        Edit or create new note
+        {`${noteToModify.note.id ? "Edit your note" : "Create new note"}`}
       </h4>
       <Formik
         initialValues={noteToModify.note}
