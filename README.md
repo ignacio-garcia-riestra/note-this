@@ -6,6 +6,7 @@ note-this is a simple web application that allows you to take notes, tag and fil
 #### ts-node 10.9.1
 #### typescript 5.1.6
 #### express 4.18.2
+#### axios 1.4.0
 #### tailwindcss 3.3.3
 
 Clone this repository and run in the terminal:
