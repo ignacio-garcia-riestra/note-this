@@ -68,7 +68,9 @@ export default function Notes() {
             Create new note
           </button>
           <button
-            className={`bg-slate-400 text-slate-50 font-inter font-bold text-lg w-auto px-2 h-11 rounded-lg`}
+            className={`${
+              notesStatus === "active" ? "bg-slate-400" : "bg-blue-400"
+            } text-slate-50 font-inter font-bold text-lg w-auto px-2 h-11 rounded-lg`}
             onClick={notesStatusToggler}
           >
             {notesStatus === "active" ? "Archived notes" : "Active notes"}
