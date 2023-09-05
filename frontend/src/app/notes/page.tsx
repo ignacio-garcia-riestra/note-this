@@ -10,6 +10,7 @@ import { useGlobalContext } from "@/app/contex/store";
 import { CreateOrEditNoteModal } from "../components/CreateOrEditNoteModal";
 import { DeleteNoteModal } from "../components/DeleteNoteModal";
 import { ToggleNoteStatusModal } from "../components/ToggleNoteStatusModal";
+import { ShowNoteModal } from "../components/ShowNoteModal";
 
 export default function Notes() {
   const router = useRouter();
@@ -97,7 +98,13 @@ export default function Notes() {
                     className="bg-green-200 h-[124px] w-[396px] p-4 flex flex-row my-3 mx-auto rounded-xl"
                     key={note.id}
                   >
-                    <div className="w-1/5 mr-3">
+                    <div
+                      className="w-1/5 mr-3 hover:cursor-pointer"
+                      onClick={() => {
+                        setNoteToModify({ note, action: "show" });
+                        setModalIsOpen(true);
+                      }}
+                    >
                       {/* Acá un ícono de nota que al clickearlo da detalles */}
                       <FaNoteSticky className="text-8xl" />
                     </div>
@@ -109,6 +116,7 @@ export default function Notes() {
                       <div className="relative h-full">
                         <div className="bg-green-100 absolute right-0 bottom-0 flex flex-row justify-around w-2/5  pt-1.5 rounded-md">
                           <div
+                            className="hover:cursor-pointer"
                             onClick={() => {
                               setNoteToModify({
                                 note,
@@ -127,6 +135,7 @@ export default function Notes() {
                             )}
                           </div>
                           <div
+                            className="hover:cursor-pointer"
                             onClick={() => {
                               setNoteToModify({ note, action: "edit" });
                               setModalIsOpen(true);
@@ -135,6 +144,7 @@ export default function Notes() {
                             <MdEdit className="text-3xl" />
                           </div>
                           <div
+                            className="hover:cursor-pointer"
                             onClick={() => {
                               setNoteToModify({ note, action: "delete" });
                               setModalIsOpen(true);
@@ -158,6 +168,8 @@ export default function Notes() {
         (noteToModify.action === "archive" ||
           noteToModify.action === "restore") ? (
         modalIsOpen && <ToggleNoteStatusModal />
+      ) : modalIsOpen && noteToModify.action === "show" ? (
+        modalIsOpen && <ShowNoteModal />
       ) : (
         modalIsOpen && <CreateOrEditNoteModal />
       )}
